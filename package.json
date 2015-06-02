@@ -1,0 +1,18 @@
+{
+  "name": "infolignes2",
+  "version": "1.0.0",
+  "description": "ReST API for SNCF train status",
+  "main": "index.js",
+  "keywords": [
+    "sncf",
+    "infolignes"
+  ],
+  "author": "Simon Morvan <garphy@zone84.net>",
+  "license": "GPLv3",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "express": "^4.12.4",
+    "q": "^1.4.1",
+    "request": "^2.57.0"
+  }
+}
