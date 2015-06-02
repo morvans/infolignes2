@@ -61,7 +61,8 @@ function scrape(trainNumber, request) {
         $('table.timetable', this).filter(function () {
           train.start = {
             name: $('.itinerary-start .station', this).text(),
-            time: $('.itinerary-start > .time:not(.new-schedule)', this).text().trim()
+            time: $('.itinerary-start > .time:not(.new-schedule)', this).text().trim(),
+            track: $('.itinerary-start .track', this).text().trim()
           };
             train.start.newSchedule = $('.itinerary-start > .time.new-schedule', this).text().trim();
 
@@ -69,14 +70,17 @@ function scrape(trainNumber, request) {
           $('.itinerary-stop', this).each(function (index, element) {
             var station = {
               name: $('.station', element).text(),
-              time: $('.time:not(.new-schedule)', element).text().trim()
+              time: $('.time:not(.new-schedule)', element).html().trim().split('<br>'),
+              track: $('.track', element).text().trim()
             };
-            station.newSchedule = $('.time.new-schedule', element).text().trim()
+            station.newSchedule = $('.time.new-schedule', element).html().trim();
             train.stops.push(station);
           });
           train.end = {
             name: $('.itinerary-end .station', this).text(),
-            time: $('.itinerary-end > .time:not(.new-schedule)', this).text().trim()
+            time: $('.itinerary-end > .time:not(.new-schedule)', this).text().trim(),
+            track: $('.itinerary-end .track', this).text().trim()
+
           };
           train.end.newSchedule = $('.itinerary-end > .time.new-schedule', this).text().trim();
 
