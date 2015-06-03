@@ -1,9 +1,9 @@
 var express = require('express');
-var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var app = express();
 var Q = require('q');
+var moment = require('moment');
 
 app.get('/train/:trainNumber', function (req, res) {
   scrape(req.params.trainNumber, request).then(function (body) {
@@ -17,12 +17,16 @@ app.get('/train/:trainNumber', function (req, res) {
 
 function scrape(trainNumber, request) {
 
+  var date = moment().format("DD/MM/YYYY");
+
   console.log("Scrape train " + trainNumber);
 
   var deferred = Q.defer();
 
   var j = request.jar();
   var request = request.defaults({jar: j, followAllRedirects: true});
+
+
 
 
   request('http://www.sncf.com/fr/horaires-info-trafic', function (error, response, body) {
@@ -36,11 +40,10 @@ function scrape(trainNumber, request) {
 
     console.log("cookies Response:" + response.statusCode);
 
-
     request.post({
       headers: {'content-type': 'application/x-www-form-urlencoded'},
       url: 'http://www.sncf.com/fr/train',
-      body: "sncfdirect=true&numeroTrain=" + trainNumber + "&date=02/06/2015"
+      body: 'sncfdirect=true&numeroTrain=' + trainNumber + '&date=' + date
     }, function (error, response, body) {
 
       if(error){
@@ -73,7 +76,7 @@ function scrape(trainNumber, request) {
               time: $('.time:not(.new-schedule)', element).html().trim().split('<br>'),
               track: $('.track', element).text().trim()
             };
-            station.newSchedule = $('.time.new-schedule', element).html().trim();
+            station.newSchedule = $('.time.new-schedule', element).html().trim().split('<br>');
             train.stops.push(station);
           });
           train.end = {
